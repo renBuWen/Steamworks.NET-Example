@@ -86,9 +86,9 @@ namespace Steamworks {
 		/// <para> set the local IP and Port to bind to</para>
 		/// <para> this must be set before CreateLocalUser()</para>
 		/// </summary>
-		public static void SetLocalIPBinding(uint unIP, ushort usPort) {
+		public static void SetLocalIPBinding(ref SteamIPAddress_t unIP, ushort usPort) {
 			InteropHelp.TestIfAvailableClient();
-			NativeMethods.ISteamClient_SetLocalIPBinding(CSteamAPIContext.GetSteamClient(), unIP, usPort);
+			NativeMethods.ISteamClient_SetLocalIPBinding(CSteamAPIContext.GetSteamClient(), ref unIP, usPort);
 		}
 
 		/// <summary>
@@ -358,6 +358,16 @@ namespace Steamworks {
 			InteropHelp.TestIfAvailableClient();
 			using (var pchVersion2 = new InteropHelp.UTF8StringHandle(pchVersion)) {
 				return NativeMethods.ISteamClient_GetISteamParties(CSteamAPIContext.GetSteamClient(), hSteamUser, hSteamPipe, pchVersion2);
+			}
+		}
+
+		/// <summary>
+		/// <para> Steam Remote Play interface</para>
+		/// </summary>
+		public static IntPtr GetISteamRemotePlay(HSteamUser hSteamUser, HSteamPipe hSteamPipe, string pchVersion) {
+			InteropHelp.TestIfAvailableClient();
+			using (var pchVersion2 = new InteropHelp.UTF8StringHandle(pchVersion)) {
+				return NativeMethods.ISteamClient_GetISteamRemotePlay(CSteamAPIContext.GetSteamClient(), hSteamUser, hSteamPipe, pchVersion2);
 			}
 		}
 	}

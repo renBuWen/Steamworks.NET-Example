@@ -1425,6 +1425,21 @@ namespace Steamworks {
 	}
 
 	// callbacks
+	[StructLayout(LayoutKind.Sequential, Pack = Packsize.value)]
+	[CallbackIdentity(Constants.k_iSteamRemotePlayCallbacks + 1)]
+	public struct SteamRemotePlaySessionConnected_t {
+		public const int k_iCallback = Constants.k_iSteamRemotePlayCallbacks + 1;
+		public RemotePlaySessionID_t m_unSessionID;
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = Packsize.value)]
+	[CallbackIdentity(Constants.k_iSteamRemotePlayCallbacks + 2)]
+	public struct SteamRemotePlaySessionDisconnected_t {
+		public const int k_iCallback = Constants.k_iSteamRemotePlayCallbacks + 2;
+		public RemotePlaySessionID_t m_unSessionID;
+	}
+
+	// callbacks
 	//-----------------------------------------------------------------------------
 	// Purpose: sent when the local file cache is fully synced with the server for an app
 	//          That means that an application can be started and has all latest files
@@ -2210,6 +2225,33 @@ namespace Steamworks {
 		public int m_cdayNewDeviceCooldown; // The number of days after initial device authorization a user must wait before using the market on that device
 	}
 
+	//-----------------------------------------------------------------------------
+	// Purpose: sent for games with enabled anti indulgence / duration control, for
+	// enabled users. Lets the game know whether the user can keep playing or
+	// whether the game should exit, and returns info about remaining gameplay time.
+	//
+	// This callback is fired asynchronously in response to timers triggering.
+	// It is also fired in response to calls to GetDurationControl().
+	//-----------------------------------------------------------------------------
+	[StructLayout(LayoutKind.Sequential, Pack = Packsize.value)]
+	[CallbackIdentity(Constants.k_iSteamUserCallbacks + 67)]
+	public struct DurationControl_t {
+		public const int k_iCallback = Constants.k_iSteamUserCallbacks + 67;
+		
+		public EResult m_eResult;								// result of call (always k_EResultOK for asynchronous timer-based notifications)
+		public AppId_t m_appid;								// appid generating playtime
+		
+		[MarshalAs(UnmanagedType.I1)]
+		public bool m_bApplicable;							// is duration control applicable to user + game combination
+		public int m_csecsLast5h;							// playtime since most recent 5 hour gap in playtime, only counting up to regulatory limit of playtime, in seconds
+		
+		public EDurationControlProgress m_progress;			// recommended progress (either everything is fine, or please exit game)
+		public EDurationControlNotification m_notification;	// notification to show, if any (always k_EDurationControlNotification_None for API calls)
+		
+		public int m_csecsToday;							// playtime on current calendar day
+		public int m_csecsRemaining;						// playtime remaining until the user hits a regulatory limit
+	}
+
 	// callbacks
 	//-----------------------------------------------------------------------------
 	// Purpose: called when the latests stats and achievements have been received
@@ -2430,19 +2472,6 @@ namespace Steamworks {
 		[MarshalAs(UnmanagedType.I1)]
 		public bool m_bSubmitted;										// true if user entered & accepted text (Call ISteamUtils::GetEnteredGamepadTextInput() for text), false if canceled input
 		public uint m_unSubmittedText;
-	}
-
-	[StructLayout(LayoutKind.Sequential, Pack = Packsize.value, Size = 1)]
-	[CallbackIdentity(Constants.k_iClientVideoCallbacks + 4)]
-	public struct BroadcastUploadStart_t {
-		public const int k_iCallback = Constants.k_iClientVideoCallbacks + 4;
-	}
-
-	[StructLayout(LayoutKind.Sequential, Pack = Packsize.value)]
-	[CallbackIdentity(Constants.k_iClientVideoCallbacks + 5)]
-	public struct BroadcastUploadStop_t {
-		public const int k_iCallback = Constants.k_iClientVideoCallbacks + 5;
-		public EBroadcastUploadResult m_eResult;
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = Packsize.value)]

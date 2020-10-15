@@ -29,7 +29,7 @@ namespace Steamworks {
 		/// </summary>
 		public static UGCQueryHandle_t CreateQueryAllUGCRequest(EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, uint unPage) {
 			InteropHelp.TestIfAvailableClient();
-			return (UGCQueryHandle_t)NativeMethods.ISteamUGC_CreateQueryAllUGCRequest(CSteamAPIContext.GetSteamUGC(), eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, unPage);
+			return (UGCQueryHandle_t)NativeMethods.ISteamUGC_CreateQueryAllUGCRequestPage(CSteamAPIContext.GetSteamUGC(), eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, unPage);
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Steamworks {
 		public static UGCQueryHandle_t CreateQueryAllUGCRequest(EUGCQuery eQueryType, EUGCMatchingUGCType eMatchingeMatchingUGCTypeFileType, AppId_t nCreatorAppID, AppId_t nConsumerAppID, string pchCursor = null) {
 			InteropHelp.TestIfAvailableClient();
 			using (var pchCursor2 = new InteropHelp.UTF8StringHandle(pchCursor)) {
-				return (UGCQueryHandle_t)NativeMethods.ISteamUGC_CreateQueryAllUGCRequest0(CSteamAPIContext.GetSteamUGC(), eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, pchCursor2);
+				return (UGCQueryHandle_t)NativeMethods.ISteamUGC_CreateQueryAllUGCRequestCursor(CSteamAPIContext.GetSteamUGC(), eQueryType, eMatchingeMatchingUGCTypeFileType, nCreatorAppID, nConsumerAppID, pchCursor2);
 			}
 		}
 
@@ -129,6 +129,20 @@ namespace Steamworks {
 		}
 
 		/// <summary>
+		/// <para> Return the first value matching the pchKey. Note that a key may map to multiple values.  Returns false if there was an error or no matching value was found.</para>
+		/// </summary>
+		public static bool GetQueryUGCKeyValueTag(UGCQueryHandle_t handle, uint index, string pchKey, out string pchValue, uint cchValueSize) {
+			InteropHelp.TestIfAvailableClient();
+			IntPtr pchValue2 = Marshal.AllocHGlobal((int)cchValueSize);
+			using (var pchKey2 = new InteropHelp.UTF8StringHandle(pchKey)) {
+				bool ret = NativeMethods.ISteamUGC_GetQueryFirstUGCKeyValueTag(CSteamAPIContext.GetSteamUGC(), handle, index, pchKey2, pchValue2, cchValueSize);
+				pchValue = ret ? InteropHelp.PtrToStringUTF8(pchValue2) : null;
+				Marshal.FreeHGlobal(pchValue2);
+				return ret;
+			}
+		}
+
+		/// <summary>
 		/// <para> Release the request to free up memory, after retrieving results</para>
 		/// </summary>
 		public static bool ReleaseQueryUGCRequest(UGCQueryHandle_t handle) {
@@ -144,6 +158,14 @@ namespace Steamworks {
 			using (var pTagName2 = new InteropHelp.UTF8StringHandle(pTagName)) {
 				return NativeMethods.ISteamUGC_AddRequiredTag(CSteamAPIContext.GetSteamUGC(), handle, pTagName2);
 			}
+		}
+
+		/// <summary>
+		/// <para> match any of the tags in this group</para>
+		/// </summary>
+		public static bool AddRequiredTagGroup(UGCQueryHandle_t handle, System.Collections.Generic.IList<string> pTagGroups) {
+			InteropHelp.TestIfAvailableClient();
+			return NativeMethods.ISteamUGC_AddRequiredTagGroup(CSteamAPIContext.GetSteamUGC(), handle, new InteropHelp.SteamParamStringArray(pTagGroups));
 		}
 
 		public static bool AddExcludedTag(UGCQueryHandle_t handle, string pTagName) {
@@ -350,6 +372,14 @@ namespace Steamworks {
 		public static bool SetAllowLegacyUpload(UGCUpdateHandle_t handle, bool bAllowLegacyUpload) {
 			InteropHelp.TestIfAvailableClient();
 			return NativeMethods.ISteamUGC_SetAllowLegacyUpload(CSteamAPIContext.GetSteamUGC(), handle, bAllowLegacyUpload);
+		}
+
+		/// <summary>
+		/// <para> remove all existing key-value tags (you can add new ones via the AddItemKeyValueTag function)</para>
+		/// </summary>
+		public static bool RemoveAllItemKeyValueTags(UGCUpdateHandle_t handle) {
+			InteropHelp.TestIfAvailableClient();
+			return NativeMethods.ISteamUGC_RemoveAllItemKeyValueTags(CSteamAPIContext.GetSteamUGC(), handle);
 		}
 
 		/// <summary>

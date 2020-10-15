@@ -41,6 +41,9 @@ namespace Steamworks {
 		/// </summary>
 		public static bool GetResultItems(SteamInventoryResult_t resultHandle, SteamItemDetails_t[] pOutItemsArray, ref uint punOutItemsArraySize) {
 			InteropHelp.TestIfAvailableClient();
+			if (pOutItemsArray != null && pOutItemsArray.Length != punOutItemsArraySize) {
+				throw new System.ArgumentException("pOutItemsArray must be the same size as punOutItemsArraySize!");
+			}
 			return NativeMethods.ISteamInventory_GetResultItems(CSteamAPIContext.GetSteamInventory(), resultHandle, pOutItemsArray, ref punOutItemsArraySize);
 		}
 
@@ -298,9 +301,12 @@ namespace Steamworks {
 		/// <para> contain the total size necessary for a subsequent call. Otherwise, the call will</para>
 		/// <para> return false if and only if there is not enough space in the output array.</para>
 		/// </summary>
-		public static bool GetItemDefinitionIDs(SteamItemDef_t[] pItemDefIDs, out uint punItemDefIDsArraySize) {
+		public static bool GetItemDefinitionIDs(SteamItemDef_t[] pItemDefIDs, ref uint punItemDefIDsArraySize) {
 			InteropHelp.TestIfAvailableClient();
-			return NativeMethods.ISteamInventory_GetItemDefinitionIDs(CSteamAPIContext.GetSteamInventory(), pItemDefIDs, out punItemDefIDsArraySize);
+			if (pItemDefIDs != null && pItemDefIDs.Length != punItemDefIDsArraySize) {
+				throw new System.ArgumentException("pItemDefIDs must be the same size as punItemDefIDsArraySize!");
+			}
+			return NativeMethods.ISteamInventory_GetItemDefinitionIDs(CSteamAPIContext.GetSteamInventory(), pItemDefIDs, ref punItemDefIDsArraySize);
 		}
 
 		/// <summary>
@@ -342,6 +348,9 @@ namespace Steamworks {
 		/// </summary>
 		public static bool GetEligiblePromoItemDefinitionIDs(CSteamID steamID, SteamItemDef_t[] pItemDefIDs, ref uint punItemDefIDsArraySize) {
 			InteropHelp.TestIfAvailableClient();
+			if (pItemDefIDs != null && pItemDefIDs.Length != punItemDefIDsArraySize) {
+				throw new System.ArgumentException("pItemDefIDs must be the same size as punItemDefIDsArraySize!");
+			}
 			return NativeMethods.ISteamInventory_GetEligiblePromoItemDefinitionIDs(CSteamAPIContext.GetSteamInventory(), steamID, pItemDefIDs, ref punItemDefIDsArraySize);
 		}
 
@@ -378,6 +387,15 @@ namespace Steamworks {
 		/// </summary>
 		public static bool GetItemsWithPrices(SteamItemDef_t[] pArrayItemDefs, ulong[] pCurrentPrices, ulong[] pBasePrices, uint unArrayLength) {
 			InteropHelp.TestIfAvailableClient();
+			if (pArrayItemDefs != null && pArrayItemDefs.Length != unArrayLength) {
+				throw new System.ArgumentException("pArrayItemDefs must be the same size as unArrayLength!");
+			}
+			if (pCurrentPrices != null && pCurrentPrices.Length != unArrayLength) {
+				throw new System.ArgumentException("pCurrentPrices must be the same size as unArrayLength!");
+			}
+			if (pBasePrices != null && pBasePrices.Length != unArrayLength) {
+				throw new System.ArgumentException("pBasePrices must be the same size as unArrayLength!");
+			}
 			return NativeMethods.ISteamInventory_GetItemsWithPrices(CSteamAPIContext.GetSteamInventory(), pArrayItemDefs, pCurrentPrices, pBasePrices, unArrayLength);
 		}
 
@@ -415,28 +433,28 @@ namespace Steamworks {
 			InteropHelp.TestIfAvailableClient();
 			using (var pchPropertyName2 = new InteropHelp.UTF8StringHandle(pchPropertyName))
 			using (var pchPropertyValue2 = new InteropHelp.UTF8StringHandle(pchPropertyValue)) {
-				return NativeMethods.ISteamInventory_SetProperty(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, pchPropertyValue2);
+				return NativeMethods.ISteamInventory_SetPropertyString(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, pchPropertyValue2);
 			}
 		}
 
 		public static bool SetProperty(SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, string pchPropertyName, bool bValue) {
 			InteropHelp.TestIfAvailableClient();
 			using (var pchPropertyName2 = new InteropHelp.UTF8StringHandle(pchPropertyName)) {
-				return NativeMethods.ISteamInventory_SetProperty0(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, bValue);
+				return NativeMethods.ISteamInventory_SetPropertyBool(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, bValue);
 			}
 		}
 
-		public static bool SetProperty1(SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, string pchPropertyName, long nValue) {
+		public static bool SetProperty(SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, string pchPropertyName, long nValue) {
 			InteropHelp.TestIfAvailableClient();
 			using (var pchPropertyName2 = new InteropHelp.UTF8StringHandle(pchPropertyName)) {
-				return NativeMethods.ISteamInventory_SetProperty1(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, nValue);
+				return NativeMethods.ISteamInventory_SetPropertyInt64(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, nValue);
 			}
 		}
 
-		public static bool SetProperty2(SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, string pchPropertyName, float flValue) {
+		public static bool SetProperty(SteamInventoryUpdateHandle_t handle, SteamItemInstanceID_t nItemID, string pchPropertyName, float flValue) {
 			InteropHelp.TestIfAvailableClient();
 			using (var pchPropertyName2 = new InteropHelp.UTF8StringHandle(pchPropertyName)) {
-				return NativeMethods.ISteamInventory_SetProperty2(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, flValue);
+				return NativeMethods.ISteamInventory_SetPropertyFloat(CSteamAPIContext.GetSteamInventory(), handle, nItemID, pchPropertyName2, flValue);
 			}
 		}
 

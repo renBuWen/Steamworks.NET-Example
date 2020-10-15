@@ -28,47 +28,6 @@ namespace Steamworks {
 		k_ERegisterActivationCodeAlreadyOwned = 4,
 	}
 
-	public enum EControllerSource : int {
-		k_EControllerSource_None,
-		k_EControllerSource_LeftTrackpad,
-		k_EControllerSource_RightTrackpad,
-		k_EControllerSource_Joystick,
-		k_EControllerSource_ABXY,
-		k_EControllerSource_Switch,
-		k_EControllerSource_LeftTrigger,
-		k_EControllerSource_RightTrigger,
-		k_EControllerSource_LeftBumper,
-		k_EControllerSource_RightBumper,
-		k_EControllerSource_Gyro,
-		k_EControllerSource_CenterTrackpad,		// PS4
-		k_EControllerSource_RightJoystick,		// Traditional Controllers
-		k_EControllerSource_DPad,				// Traditional Controllers
-		k_EControllerSource_Key,                // Keyboards with scan codes - Unused
-		k_EControllerSource_Mouse,              // Traditional mouse - Unused
-		k_EControllerSource_LeftGyro,			// Secondary Gyro - Switch - Unused
-		k_EControllerSource_Count
-	}
-
-	public enum EControllerSourceMode : int {
-		k_EControllerSourceMode_None,
-		k_EControllerSourceMode_Dpad,
-		k_EControllerSourceMode_Buttons,
-		k_EControllerSourceMode_FourButtons,
-		k_EControllerSourceMode_AbsoluteMouse,
-		k_EControllerSourceMode_RelativeMouse,
-		k_EControllerSourceMode_JoystickMove,
-		k_EControllerSourceMode_JoystickMouse,
-		k_EControllerSourceMode_JoystickCamera,
-		k_EControllerSourceMode_ScrollWheel,
-		k_EControllerSourceMode_Trigger,
-		k_EControllerSourceMode_TouchMenu,
-		k_EControllerSourceMode_MouseJoystick,
-		k_EControllerSourceMode_MouseRegion,
-		k_EControllerSourceMode_RadialMenu,
-		k_EControllerSourceMode_SingleButton,
-		k_EControllerSourceMode_Switches
-	}
-
 	// Note: Please do not use action origins as a way to identify controller types. There is no
 	// guarantee that they will be added in a contiguous manner - use GetInputTypeForHandle instead
 	// Versions of Steam that add new controller types in the future will extend this enum if you're
@@ -329,6 +288,12 @@ namespace Steamworks {
 		k_EControllerActionOrigin_Switch_RightGrip_Lower,  // Right JoyCon SL Button
 		k_EControllerActionOrigin_Switch_RightGrip_Upper,  // Right JoyCon SR Button
 
+		// Added in SDK 1.45
+		k_EControllerActionOrigin_PS4_DPad_Move,
+		k_EControllerActionOrigin_XBoxOne_DPad_Move,
+		k_EControllerActionOrigin_XBox360_DPad_Move,
+		k_EControllerActionOrigin_Switch_DPad_Move,
+
 		k_EControllerActionOrigin_Count, // If Steam has added support for new controllers origins will go here.
 		k_EControllerActionOrigin_MaximumPossibleValue = 32767, // Origins are currently a maximum of 16 bits.
 	}
@@ -515,27 +480,6 @@ namespace Steamworks {
 		k_eHTMLKeyModifier_ShiftDown = 1 << 2,
 	}
 
-	public enum EInputSource : int {
-		k_EInputSource_None,
-		k_EInputSource_LeftTrackpad,
-		k_EInputSource_RightTrackpad,
-		k_EInputSource_Joystick,
-		k_EInputSource_ABXY,
-		k_EInputSource_Switch,
-		k_EInputSource_LeftTrigger,
-		k_EInputSource_RightTrigger,
-		k_EInputSource_LeftBumper,
-		k_EInputSource_RightBumper,
-		k_EInputSource_Gyro,
-		k_EInputSource_CenterTrackpad,		// PS4
-		k_EInputSource_RightJoystick,		// Traditional Controllers
-		k_EInputSource_DPad,				// Traditional Controllers
-		k_EInputSource_Key,                 // Keyboards with scan codes - Unused
-		k_EInputSource_Mouse,               // Traditional mouse - Unused
-		k_EInputSource_LeftGyro,			// Secondary Gyro - Switch - Unused
-		k_EInputSource_Count
-	}
-
 	public enum EInputSourceMode : int {
 		k_EInputSourceMode_None,
 		k_EInputSourceMode_Dpad,
@@ -667,7 +611,7 @@ namespace Steamworks {
 		k_EInputActionOrigin_PS4_Gyro_Pitch,
 		k_EInputActionOrigin_PS4_Gyro_Yaw,
 		k_EInputActionOrigin_PS4_Gyro_Roll,
-		k_EInputActionOrigin_PS4_Reserved0,
+		k_EInputActionOrigin_PS4_DPad_Move,
 		k_EInputActionOrigin_PS4_Reserved1,
 		k_EInputActionOrigin_PS4_Reserved2,
 		k_EInputActionOrigin_PS4_Reserved3,
@@ -708,7 +652,7 @@ namespace Steamworks {
 		k_EInputActionOrigin_XBoxOne_DPad_South,
 		k_EInputActionOrigin_XBoxOne_DPad_West,
 		k_EInputActionOrigin_XBoxOne_DPad_East,
-		k_EInputActionOrigin_XBoxOne_Reserved0,
+		k_EInputActionOrigin_XBoxOne_DPad_Move,
 		k_EInputActionOrigin_XBoxOne_Reserved1,
 		k_EInputActionOrigin_XBoxOne_Reserved2,
 		k_EInputActionOrigin_XBoxOne_Reserved3,
@@ -749,7 +693,7 @@ namespace Steamworks {
 		k_EInputActionOrigin_XBox360_DPad_South,
 		k_EInputActionOrigin_XBox360_DPad_West,
 		k_EInputActionOrigin_XBox360_DPad_East,
-		k_EInputActionOrigin_XBox360_Reserved0,
+		k_EInputActionOrigin_XBox360_DPad_Move,
 		k_EInputActionOrigin_XBox360_Reserved1,
 		k_EInputActionOrigin_XBox360_Reserved2,
 		k_EInputActionOrigin_XBox360_Reserved3,
@@ -797,7 +741,7 @@ namespace Steamworks {
 		k_EInputActionOrigin_Switch_ProGyro_Pitch,  // Primary Gyro in Pro Controller, or Right JoyCon
 		k_EInputActionOrigin_Switch_ProGyro_Yaw,  // Primary Gyro in Pro Controller, or Right JoyCon
 		k_EInputActionOrigin_Switch_ProGyro_Roll,  // Primary Gyro in Pro Controller, or Right JoyCon
-		k_EInputActionOrigin_Switch_Reserved0,
+		k_EInputActionOrigin_Switch_DPad_Move,
 		k_EInputActionOrigin_Switch_Reserved1,
 		k_EInputActionOrigin_Switch_Reserved2,
 		k_EInputActionOrigin_Switch_Reserved3,
@@ -921,6 +865,8 @@ namespace Steamworks {
 		k_ELobbyTypeInvisible = 3,		// returned by search, but not visible to other friends
 										//    useful if you want a user in two lobbies, for example matching groups together
 										//	  a user can be in only one regular lobby, and up to two invisible lobbies
+		k_ELobbyTypePrivateUnique = 4,	// private, unique and does not delete when empty - only one of these may exist per unique keypair set
+										// can only create from webapi
 	}
 
 	// lobby search filter tools
@@ -1076,7 +1022,19 @@ namespace Steamworks {
 		k_EFeatureParentalSetup = 10,
 		k_EFeatureLibrary = 11,
 		k_EFeatureTest = 12,
+		k_EFeatureSiteLicense = 13,
 		k_EFeatureMax
+	}
+
+	//-----------------------------------------------------------------------------
+	// Purpose: The form factor of a device
+	//-----------------------------------------------------------------------------
+	public enum ESteamDeviceFormFactor : int {
+		k_ESteamDeviceFormFactorUnknown		= 0,
+		k_ESteamDeviceFormFactorPhone		= 1,
+		k_ESteamDeviceFormFactorTablet		= 2,
+		k_ESteamDeviceFormFactorComputer	= 3,
+		k_ESteamDeviceFormFactorTV			= 4,
 	}
 
 	[Flags]
@@ -1086,8 +1044,10 @@ namespace Steamworks {
 		k_ERemoteStoragePlatformOSX			= (1 << 1),
 		k_ERemoteStoragePlatformPS3			= (1 << 2),
 		k_ERemoteStoragePlatformLinux		= (1 << 3),
-		k_ERemoteStoragePlatformReserved2	= (1 << 4),
+		k_ERemoteStoragePlatformSwitch		= (1 << 4),
 		k_ERemoteStoragePlatformAndroid		= (1 << 5),
+		k_ERemoteStoragePlatformIOS			= (1 << 6),
+		// NB we get one more before we need to widen some things
 
 		k_ERemoteStoragePlatformAll = -1
 	}
@@ -1096,6 +1056,7 @@ namespace Steamworks {
 		k_ERemoteStoragePublishedFileVisibilityPublic = 0,
 		k_ERemoteStoragePublishedFileVisibilityFriendsOnly = 1,
 		k_ERemoteStoragePublishedFileVisibilityPrivate = 2,
+		k_ERemoteStoragePublishedFileVisibilityUnlisted = 3,
 	}
 
 	public enum EWorkshopFileType : int {
@@ -1189,7 +1150,7 @@ namespace Steamworks {
 		k_EUGCMatchingUGCType_UsableInGame		 = 10,		// ready-to-use items and integrated guides
 		k_EUGCMatchingUGCType_ControllerBindings = 11,
 		k_EUGCMatchingUGCType_GameManagedItems	 = 12,		// game managed items (not managed by users)
-		k_EUGCMatchingUGCType_All				 = ~0,		// return everything
+		k_EUGCMatchingUGCType_All				 = ~0,		// @note: will only be valid for CreateQueryUserUGCRequest requests
 	}
 
 	// Different lists of published UGC for a user.
@@ -1375,6 +1336,7 @@ namespace Steamworks {
 
 	// General result codes
 	public enum EResult : int {
+		k_EResultNone = 0,							// no result
 		k_EResultOK	= 1,							// success
 		k_EResultFail = 2,							// generic failure
 		k_EResultNoConnection = 3,					// no/failed network connection
@@ -1488,6 +1450,8 @@ namespace Steamworks {
 		k_EResultAccountNotFriends = 111,			// the user is not mutually friends
 		k_EResultLimitedUserAccount = 112,			// the user is limited
 		k_EResultCantRemoveItem = 113,				// item can't be removed
+		k_EResultAccountDeleted = 114,				// account has been deleted
+		k_EResultExistingUserCancelledLicense = 115,	// A license for this already exists, but cancelled
 	}
 
 	// Error codes for use with the voice functions
@@ -1610,6 +1574,8 @@ namespace Steamworks {
 		k_EAppOwnershipFlags_RentalNotActivated	= 0x10000,	// Rental hasn't been activated yet
 		k_EAppOwnershipFlags_Rental				= 0x20000,	// Is a rental
 		k_EAppOwnershipFlags_SiteLicense		= 0x40000,	// Is from a site license
+		k_EAppOwnershipFlags_LegacyFreeSub		= 0x80000,	// App only owned through Steam's legacy free sub
+		k_EAppOwnershipFlags_InvalidOSType		= 0x100000,	// app not supported on current OS version, used to indicate a game is 32-bit on post-catalina. Currently it's own flag so the library will display a notice.
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1632,9 +1598,10 @@ namespace Steamworks {
 		k_EAppType_Franchise			= 0x400,	// A hub for collections of multiple apps, eg films, series, games
 		k_EAppType_Video				= 0x800,	// A video component of either a Film or TVSeries (may be the feature, an episode, preview, making-of, etc)
 		k_EAppType_Plugin				= 0x1000,	// Plug-in types for other Apps
-		k_EAppType_Music				= 0x2000,	// Music files
+		k_EAppType_MusicAlbum			= 0x2000,	// "Video game soundtrack album"
 		k_EAppType_Series				= 0x4000,	// Container app for video series
-		k_EAppType_Comic				= 0x8000,	// Comic Book
+		k_EAppType_Comic_UNUSED			= 0x8000,	// Comic Book
+		k_EAppType_Beta					= 0x10000,	// this is a beta version of a game
 
 		k_EAppType_Shortcut				= 0x40000000,	// just a shortcut, client side only
 		k_EAppType_DepotOnly			= -2147483647,	// placeholder since depots and apps share the same namespace
@@ -1809,12 +1776,15 @@ namespace Steamworks {
 		k_eEVRHMDType_HTC_VivePre = 2,	// htc vive pre
 		k_eEVRHMDType_HTC_Vive = 3,	// htc vive consumer release
 		k_eEVRHMDType_HTC_VivePro = 4,	// htc vive pro release
+		k_eEVRHMDType_HTC_ViveCosmos = 5,	// HTC Vive Cosmos
 
 		k_eEVRHMDType_HTC_Unknown = 20, // unknown htc hmd
 
 		k_eEVRHMDType_Oculus_DK1 = 21, // Oculus DK1
 		k_eEVRHMDType_Oculus_DK2 = 22, // Oculus DK2
-		k_eEVRHMDType_Oculus_Rift = 23, // Oculus rift
+		k_eEVRHMDType_Oculus_Rift = 23, // Oculus Rift
+		k_eEVRHMDType_Oculus_RiftS = 24, // Oculus Rift S
+		k_eEVRHMDType_Oculus_Quest = 25, // Oculus Quest
 
 		k_eEVRHMDType_Oculus_Unknown = 40, // // Oculus unknown HMD
 
@@ -1829,6 +1799,7 @@ namespace Steamworks {
 
 		k_eEVRHMDType_HP_Unknown = 80, // HP unknown HMD
 		k_eEVRHMDType_HP_WindowsMR = 81, // HP Windows MR headset
+		k_eEVRHMDType_HP_Reverb = 82, // HP Reverb Windows MR headset
 
 		k_eEVRHMDType_Samsung_Unknown = 90, // Samsung unknown HMD
 		k_eEVRHMDType_Samsung_Odyssey = 91, // Samsung Odyssey Windows MR headset
@@ -1841,6 +1812,9 @@ namespace Steamworks {
 		k_eEVRHMDType_Huawei_Unknown = 120, // Huawei unknown HMD
 		k_eEVRHMDType_Huawei_VR2 = 121, // Huawei VR2 3DOF headset
 		k_eEVRHMDType_Huawei_EndOfRange = 129, // end of Huawei HMD range
+
+		k_eEVRHmdType_Valve_Unknown = 130, // Valve Unknown HMD
+		k_eEVRHmdType_Valve_Index = 131, // Valve Index HMD
 
 	}
 
@@ -1903,6 +1877,38 @@ namespace Steamworks {
 		k_EMarketNotAllowedReason_AcceptedWalletGift = (1 << 15),
 	}
 
+	//
+	// describes XP / progress restrictions to apply for games with duration control /
+	// anti-indulgence enabled for minor Steam China users.
+	//
+	// WARNING: DO NOT RENUMBER
+	public enum EDurationControlProgress : int {
+		k_EDurationControlProgress_Full = 0,	// Full progress
+		k_EDurationControlProgress_Half = 1,	// deprecated - XP or persistent rewards should be halved
+		k_EDurationControlProgress_None = 2,	// deprecated - XP or persistent rewards should be stopped
+
+		k_EDurationControl_ExitSoon_3h = 3,		// allowed 3h time since 5h gap/break has elapsed, game should exit - steam will terminate the game soon
+		k_EDurationControl_ExitSoon_5h = 4,		// allowed 5h time in calendar day has elapsed, game should exit - steam will terminate the game soon
+		k_EDurationControl_ExitSoon_Night = 5,	// game running after day period, game should exit - steam will terminate the game soon
+	}
+
+	//
+	// describes which notification timer has expired, for steam china duration control feature
+	//
+	// WARNING: DO NOT RENUMBER
+	public enum EDurationControlNotification : int {
+		k_EDurationControlNotification_None = 0,		// just informing you about progress, no notification to show
+		k_EDurationControlNotification_1Hour = 1,		// "you've been playing for N hours"
+
+		k_EDurationControlNotification_3Hours = 2,		// deprecated - "you've been playing for 3 hours; take a break"
+		k_EDurationControlNotification_HalfProgress = 3,// deprecated - "your XP / progress is half normal"
+		k_EDurationControlNotification_NoProgress = 4,	// deprecated - "your XP / progress is zero"
+
+		k_EDurationControlNotification_ExitSoon_3h = 5,	// allowed 3h time since 5h gap/break has elapsed, game should exit - steam will terminate the game soon
+		k_EDurationControlNotification_ExitSoon_5h = 6,	// allowed 5h time in calendar day has elapsed, game should exit - steam will terminate the game soon
+		k_EDurationControlNotification_ExitSoon_Night = 7,// game running after day period, game should exit - steam will terminate the game soon
+	}
+
 	public enum EGameSearchErrorCode_t : int {
 		k_EGameSearchErrorCode_OK = 1,
 		k_EGameSearchErrorCode_Failed_Search_Already_In_Progress = 2,
@@ -1921,6 +1927,19 @@ namespace Steamworks {
 		k_EPlayerResultKicked = 3,			// kicked by other players/moderator/server rules
 		k_EPlayerResultIncomplete = 4,		// player stayed to end but game did not conclude successfully ( nofault to player )
 		k_EPlayerResultCompleted = 5,		// player completed game
+	}
+
+	public enum ESteamIPv6ConnectivityProtocol : int {
+		k_ESteamIPv6ConnectivityProtocol_Invalid = 0,
+		k_ESteamIPv6ConnectivityProtocol_HTTP = 1,		// because a proxy may make this different than other protocols
+		k_ESteamIPv6ConnectivityProtocol_UDP = 2,		// test UDP connectivity. Uses a port that is commonly needed for other Steam stuff. If UDP works, TCP probably works.
+	}
+
+	// For the above transport protocol, what do we think the local machine's connectivity to the internet over ipv6 is like
+	public enum ESteamIPv6ConnectivityState : int {
+		k_ESteamIPv6ConnectivityState_Unknown = 0,	// We haven't run a test yet
+		k_ESteamIPv6ConnectivityState_Good = 1,		// We have recently been able to make a request on ipv6 for the given protocol
+		k_ESteamIPv6ConnectivityState_Bad = 2,		// We failed to make a request, either because this machine has no ipv6 address assigned, or it has no upstream connectivity
 	}
 
 	// HTTP related types
@@ -2001,6 +2020,11 @@ namespace Steamworks {
 		k_EHTTPStatusCode504GatewayTimeout =		504,
 		k_EHTTPStatusCode505HTTPVersionNotSupported = 505,
 		k_EHTTPStatusCode5xxUnknown =				599,
+	}
+
+	public enum ESteamIPType : int {
+		k_ESteamIPTypeIPv4 = 0,
+		k_ESteamIPTypeIPv6 = 1,
 	}
 
 	// Steam universes.  Each universe is a self-contained Steam instance.

@@ -48,7 +48,7 @@ namespace Steamworks {
 		/// </summary>
 		public static int GetConnectedControllers(InputHandle_t[] handlesOut) {
 			InteropHelp.TestIfAvailableClient();
-			if (handlesOut.Length != Constants.STEAM_INPUT_MAX_COUNT) {
+			if (handlesOut != null && handlesOut.Length != Constants.STEAM_INPUT_MAX_COUNT) {
 				throw new System.ArgumentException("handlesOut must be the same size as Constants.STEAM_INPUT_MAX_COUNT!");
 			}
 			return NativeMethods.ISteamInput_GetConnectedControllers(CSteamAPIContext.GetSteamInput(), handlesOut);
@@ -100,9 +100,17 @@ namespace Steamworks {
 			NativeMethods.ISteamInput_DeactivateAllActionSetLayers(CSteamAPIContext.GetSteamInput(), inputHandle);
 		}
 
-		public static int GetActiveActionSetLayers(InputHandle_t inputHandle, out InputActionSetHandle_t handlesOut) {
+		/// <summary>
+		/// <para> Enumerate currently active layers.</para>
+		/// <para> handlesOut should point to a STEAM_INPUT_MAX_ACTIVE_LAYERS sized array of ControllerActionSetHandle_t handles</para>
+		/// <para> Returns the number of handles written to handlesOut</para>
+		/// </summary>
+		public static int GetActiveActionSetLayers(InputHandle_t inputHandle, InputActionSetHandle_t[] handlesOut) {
 			InteropHelp.TestIfAvailableClient();
-			return NativeMethods.ISteamInput_GetActiveActionSetLayers(CSteamAPIContext.GetSteamInput(), inputHandle, out handlesOut);
+			if (handlesOut != null && handlesOut.Length != Constants.STEAM_INPUT_MAX_ACTIVE_LAYERS) {
+				throw new System.ArgumentException("handlesOut must be the same size as Constants.STEAM_INPUT_MAX_ACTIVE_LAYERS!");
+			}
+			return NativeMethods.ISteamInput_GetActiveActionSetLayers(CSteamAPIContext.GetSteamInput(), inputHandle, handlesOut);
 		}
 
 		/// <summary>
@@ -133,6 +141,9 @@ namespace Steamworks {
 		/// </summary>
 		public static int GetDigitalActionOrigins(InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputDigitalActionHandle_t digitalActionHandle, EInputActionOrigin[] originsOut) {
 			InteropHelp.TestIfAvailableClient();
+			if (originsOut != null && originsOut.Length != Constants.STEAM_INPUT_MAX_ORIGINS) {
+				throw new System.ArgumentException("originsOut must be the same size as Constants.STEAM_INPUT_MAX_ORIGINS!");
+			}
 			return NativeMethods.ISteamInput_GetDigitalActionOrigins(CSteamAPIContext.GetSteamInput(), inputHandle, actionSetHandle, digitalActionHandle, originsOut);
 		}
 
@@ -161,11 +172,14 @@ namespace Steamworks {
 		/// </summary>
 		public static int GetAnalogActionOrigins(InputHandle_t inputHandle, InputActionSetHandle_t actionSetHandle, InputAnalogActionHandle_t analogActionHandle, EInputActionOrigin[] originsOut) {
 			InteropHelp.TestIfAvailableClient();
+			if (originsOut != null && originsOut.Length != Constants.STEAM_INPUT_MAX_ORIGINS) {
+				throw new System.ArgumentException("originsOut must be the same size as Constants.STEAM_INPUT_MAX_ORIGINS!");
+			}
 			return NativeMethods.ISteamInput_GetAnalogActionOrigins(CSteamAPIContext.GetSteamInput(), inputHandle, actionSetHandle, analogActionHandle, originsOut);
 		}
 
 		/// <summary>
-		/// <para> Get a local path to art for on-screen glyph for a particular origin - this call is cheap</para>
+		/// <para> Get a local path to art for on-screen glyph for a particular origin</para>
 		/// </summary>
 		public static string GetGlyphForActionOrigin(EInputActionOrigin eOrigin) {
 			InteropHelp.TestIfAvailableClient();
@@ -173,7 +187,7 @@ namespace Steamworks {
 		}
 
 		/// <summary>
-		/// <para> Returns a localized string (from Steam's language setting) for the specified origin - this call is serialized</para>
+		/// <para> Returns a localized string (from Steam's language setting) for the specified origin.</para>
 		/// </summary>
 		public static string GetStringForActionOrigin(EInputActionOrigin eOrigin) {
 			InteropHelp.TestIfAvailableClient();
@@ -272,7 +286,7 @@ namespace Steamworks {
 		}
 
 		/// <summary>
-		/// <para> Returns a localized string (from Steam's language setting) for the specified Xbox controller origin. This function is cheap.</para>
+		/// <para> Returns a localized string (from Steam's language setting) for the specified Xbox controller origin.</para>
 		/// </summary>
 		public static string GetStringForXboxOrigin(EXboxOrigin eOrigin) {
 			InteropHelp.TestIfAvailableClient();
@@ -280,7 +294,7 @@ namespace Steamworks {
 		}
 
 		/// <summary>
-		/// <para> Get a local path to art for on-screen glyph for a particular Xbox controller origin. This function is serialized.</para>
+		/// <para> Get a local path to art for on-screen glyph for a particular Xbox controller origin</para>
 		/// </summary>
 		public static string GetGlyphForXboxOrigin(EXboxOrigin eOrigin) {
 			InteropHelp.TestIfAvailableClient();
@@ -298,12 +312,29 @@ namespace Steamworks {
 
 		/// <summary>
 		/// <para> Convert an origin to another controller type - for inputs not present on the other controller type this will return k_EInputActionOrigin_None</para>
-		/// <para> When a new input type is added you will be able to pass in k_ESteamInputType_Unknown amd the closest origin that your version of the SDK regonized will be returned</para>
+		/// <para> When a new input type is added you will be able to pass in k_ESteamInputType_Unknown and the closest origin that your version of the SDK recognized will be returned</para>
 		/// <para> ex: if a Playstation 5 controller was released this function would return Playstation 4 origins.</para>
 		/// </summary>
 		public static EInputActionOrigin TranslateActionOrigin(ESteamInputType eDestinationInputType, EInputActionOrigin eSourceOrigin) {
 			InteropHelp.TestIfAvailableClient();
 			return NativeMethods.ISteamInput_TranslateActionOrigin(CSteamAPIContext.GetSteamInput(), eDestinationInputType, eSourceOrigin);
+		}
+
+		/// <summary>
+		/// <para> Get the binding revision for a given device. Returns false if the handle was not valid or if a mapping is not yet loaded for the device</para>
+		/// </summary>
+		public static bool GetDeviceBindingRevision(InputHandle_t inputHandle, out int pMajor, out int pMinor) {
+			InteropHelp.TestIfAvailableClient();
+			return NativeMethods.ISteamInput_GetDeviceBindingRevision(CSteamAPIContext.GetSteamInput(), inputHandle, out pMajor, out pMinor);
+		}
+
+		/// <summary>
+		/// <para> Get the Steam Remote Play session ID associated with a device, or 0 if there is no session associated with it</para>
+		/// <para> See isteamremoteplay.h for more information on Steam Remote Play sessions</para>
+		/// </summary>
+		public static uint GetRemotePlaySessionID(InputHandle_t inputHandle) {
+			InteropHelp.TestIfAvailableClient();
+			return NativeMethods.ISteamInput_GetRemotePlaySessionID(CSteamAPIContext.GetSteamInput(), inputHandle);
 		}
 	}
 }
